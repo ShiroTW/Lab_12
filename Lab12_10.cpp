@@ -31,7 +31,7 @@ void DeleteTree(TreeNode* node) {
 vector<string> ReadWordsFromFile(const string& filename) {
     ifstream file(filename);
     if (!file) {
-        cout << "Помилка: не вдалося відкрити файл \"" << filename << "\"\n";
+        cout << "Помилка: не вдалося вiдкрити файл \"" << filename << "\"\n";
         return {};
     }
     vector<string> words;
@@ -62,7 +62,6 @@ vector<string> FilterWordsByLength(const vector<string>& words, int length) {
     return result;
 }
 
-// Ітеративна вставка у бінарне дерево за алфавітом (рівень вже заданий)
 TreeNode* InsertNodeIter(TreeNode* root, TreeNode* newNode) {
     if (!root) return newNode;
     TreeNode* current = root;
@@ -74,7 +73,6 @@ TreeNode* InsertNodeIter(TreeNode* root, TreeNode* newNode) {
         else if (newNode->word > current->word)
             current = current->right;
         else {
-            // слово вже є — не додаємо дублікати
             delete newNode;
             return root;
         }
@@ -86,7 +84,6 @@ TreeNode* InsertNodeIter(TreeNode* root, TreeNode* newNode) {
     return root;
 }
 
-// Вивід дерева (інфіксний обхід)
 void PrintTree(TreeNode* node) {
     if (!node) return;
     PrintTree(node->left);
@@ -94,7 +91,6 @@ void PrintTree(TreeNode* node) {
     PrintTree(node->right);
 }
 
-// Пошук слова
 bool SearchWord(TreeNode* root, const string& word) {
     TreeNode* current = root;
     while (current) {
@@ -108,7 +104,6 @@ bool SearchWord(TreeNode* root, const string& word) {
     return false;
 }
 
-// Функція для вводу числа з перевіркою
 int InputNumberInRange(int min, int max) {
     int choice;
     while (true) {
@@ -117,21 +112,20 @@ int InputNumberInRange(int min, int max) {
             return choice;
         }
         else {
-            cout << "Будь ласка, введіть число від " << min << " до " << max << ": ";
+            cout << "Будь ласка, введiть число вiд " << min << " до " << max << ": ";
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
 }
 
-// Функція вибору слів користувачем, якщо їх більше, ніж можна додати
 vector<string> ChooseWordsToInclude(const vector<string>& words, int maxCount) {
     vector<string> chosen;
-    cout << "Відмітьте індекси слів, які хочете включити до дерева (макс. " << maxCount << "):\n";
+    cout << "Вiдмiтьте iндекси слів, якi хочете включити до дерева (макс. " << maxCount << "):\n";
     for (size_t i = 0; i < words.size(); ++i) {
         cout << i << ": " << words[i] << "\n";
     }
-    cout << "Введіть індекси через пробіл, завершивши рядок Enter:\n";
+    cout << "Введiть iндекси через пробіл, завершивши рядок Enter:\n";
 
     while (chosen.size() < (size_t)maxCount) {
         string line;
@@ -148,7 +142,7 @@ vector<string> ChooseWordsToInclude(const vector<string>& words, int maxCount) {
                 }
             }
             else {
-                cout << "Індекс " << idx << " недійсний.\n";
+                cout << "Iндекс " << idx << " недійсний.\n";
             }
         }
         if (chosen.size() < (size_t)maxCount)
@@ -159,7 +153,6 @@ vector<string> ChooseWordsToInclude(const vector<string>& words, int maxCount) {
     return chosen;
 }
 
-// Видалення вузла дерева - реалізація рекурсивна, для простоти
 TreeNode* RemoveNode(TreeNode* root, const string& word) {
     if (!root) return nullptr;
     if (word < root->word)
@@ -167,7 +160,6 @@ TreeNode* RemoveNode(TreeNode* root, const string& word) {
     else if (word > root->word)
         root->right = RemoveNode(root->right, word);
     else {
-        // Знайшли вузол для видалення
         if (!root->left) {
             TreeNode* rightChild = root->right;
             delete root;
@@ -179,7 +171,6 @@ TreeNode* RemoveNode(TreeNode* root, const string& word) {
             return leftChild;
         }
         else {
-            // Знайти мінімальний елемент у правому піддереві (наступник)
             TreeNode* minNode = root->right;
             while (minNode->left)
                 minNode = minNode->left;
@@ -209,22 +200,22 @@ int main() {
             << "5. Знайти слово\n"
             << "6. Вивести дерево\n"
             << "7. Вивести слова поза деревом\n"
-            << "0. Вихід\n"
-            << "Ваш вибір: ";
+            << "0. Вихiд\n"
+            << "Ваш вибiр: ";
 
         int choice = InputNumberInRange(0, 7);
 
         if (choice == 0) break;
 
         if (choice == 1) {
-            cout << "Введіть ім'я файлу: ";
+            cout << "Введiть iм'я файлу: ";
             getline(cin, filename);
             allWords = ReadWordsFromFile(filename);
             if (allWords.empty()) {
-                cout << "Слова не знайдені або файл пустий.\n";
+                cout << "Слова не знайденi або файл пустий.\n";
             }
             else {
-                cout << "Зчитано " << allWords.size() << " слів.\n";
+                cout << "Зчитано " << allWords.size() << " слiв.\n";
             }
             DeleteTree(root);
             root = nullptr;
@@ -238,7 +229,7 @@ int main() {
 
             vector<string> oneLetterWords = FilterWordsByLength(allWords, 1);
             if (oneLetterWords.empty()) {
-                cout << "Немає однолітерних слів для кореня дерева.\n";
+                cout << "Немає однолiтерних слiв для кореня дерева.\n";
                 continue;
             }
 
@@ -256,11 +247,11 @@ int main() {
                 vector<string> wordsAtLevel = FilterWordsByLength(allWords, lvl);
                 sort(wordsAtLevel.begin(), wordsAtLevel.end());
 
-                int maxCount = 1 << (lvl - 1); // максимальна кількість на рівні
+                int maxCount = 1 << (lvl - 1);
                 vector<string> wordsToInsert;
 
                 if ((int)wordsAtLevel.size() > maxCount) {
-                    cout << "На рівні " << lvl << " більше слів, ніж можна додати (" << wordsAtLevel.size() << " > " << maxCount << ").\n";
+                    cout << "На рiвнi " << lvl << " бiльше слiв, ніж можна додати (" << wordsAtLevel.size() << " > " << maxCount << ").\n";
                     wordsToInsert = ChooseWordsToInclude(wordsAtLevel, maxCount);
                     for (const auto& w : wordsAtLevel) {
                         if (find(wordsToInsert.begin(), wordsToInsert.end(), w) == wordsToInsert.end())
@@ -278,25 +269,24 @@ int main() {
             cout << "Дерево побудовано з коренем \"" << rootWord << "\".\n";
         }
         else if (choice == 3) {
-            cout << "Введіть слово для додавання: ";
+            cout << "Введiть слово для додавання: ";
             string w; getline(cin, w);
-            // Обробка слова (залишити лише літери, маленькі)
             string cleanWord;
             for (char c : w) {
                 if (isalpha(static_cast<unsigned char>(c)))
                     cleanWord += static_cast<char>(tolower(c));
             }
             if (cleanWord.empty()) {
-                cout << "Невірне слово.\n";
+                cout << "Невiрне слово.\n";
                 continue;
             }
             if (!root && cleanWord.length() != 1) {
-                cout << "Спочатку побудуйте дерево з коренем (однолітерним словом).\n";
+                cout << "Спочатку побудуйте дерево з коренем (однолiтерним словом).\n";
                 continue;
             }
             if (cleanWord.length() == 1 && !root) {
                 root = CreateNode(cleanWord, 1);
-                cout << "Корінь додано.\n";
+                cout << "Корiнь додано.\n";
             }
             else {
                 root = InsertNodeIter(root, CreateNode(cleanWord, (int)cleanWord.length()));
@@ -308,7 +298,7 @@ int main() {
                 cout << "Дерево пусте.\n";
                 continue;
             }
-            cout << "Введіть слово для видалення: ";
+            cout << "Введiть слово для видалення: ";
             string w; getline(cin, w);
             string cleanWord;
             for (char c : w) {
@@ -316,11 +306,11 @@ int main() {
                     cleanWord += static_cast<char>(tolower(c));
             }
             if (cleanWord.empty()) {
-                cout << "Невірне слово.\n";
+                cout << "Невiрне слово.\n";
                 continue;
             }
             if (!SearchWord(root, cleanWord)) {
-                cout << "Слово не знайдено в дереві.\n";
+                cout << "Слово не знайдено в деревi.\n";
                 continue;
             }
             root = RemoveNode(root, cleanWord);
@@ -343,24 +333,24 @@ int main() {
                 continue;
             }
             if (SearchWord(root, cleanWord))
-                cout << "Слово знайдено в дереві.\n";
+                cout << "Слово знайдено в деревi.\n";
             else
-                cout << "Слово не знайдено в дереві.\n";
+                cout << "Слово не знайдено в деревi.\n";
         }
         else if (choice == 6) {
             if (!root) {
                 cout << "Дерево пусте.\n";
                 continue;
             }
-            cout << "Вміст дерева (інфіксний обхід):\n";
+            cout << "Вмiст дерева (iнфiксний обхід):\n";
             PrintTree(root);
         }
         else if (choice == 7) {
             if (excludedWords.empty()) {
-                cout << "Немає слів поза деревом.\n";
+                cout << "Немає слiв поза деревом.\n";
             }
             else {
-                cout << "Слова, що не увійшли до дерева:\n";
+                cout << "Слова, що не увiйшли до дерева:\n";
                 for (const auto& w : excludedWords) cout << w << "\n";
             }
         }

@@ -27,7 +27,6 @@ struct Record {
 const int TABLE_SIZE = 100;
 vector<Record> table[TABLE_SIZE];
 
-// Хеш-функція
 int Hash(const string& dest, int hour, int minute) {
     int hash = 0;
     for (char c : dest) hash += c;
@@ -57,7 +56,6 @@ string ComfortTypeToString(ComfortType type) {
     return "";
 }
 
-// Додавання запису
 bool InsertRecord(const Record& rec) {
     int hash = Hash(rec.destination, rec.hour, rec.minute);
     for (const Record& r : table[hash]) {
@@ -68,7 +66,6 @@ bool InsertRecord(const Record& rec) {
     return true;
 }
 
-// Пошук запису
 Record* FindRecord(const string& dest, int h, int m) {
     int hash = Hash(dest, h, m);
     for (Record& r : table[hash]) {
@@ -78,7 +75,6 @@ Record* FindRecord(const string& dest, int h, int m) {
     return nullptr;
 }
 
-// Видалення
 bool DeleteRecord(const string& dest, int h, int m) {
     int hash = Hash(dest, h, m);
     auto& bucket = table[hash];
@@ -92,7 +88,6 @@ bool DeleteRecord(const string& dest, int h, int m) {
     return false;
 }
 
-// Редагування
 bool EditRecord(const string& dest, int h, int m, const Record& newRec) {
     Record* r = FindRecord(dest, h, m);
     if (!r) return false;
@@ -100,7 +95,6 @@ bool EditRecord(const string& dest, int h, int m, const Record& newRec) {
     return true;
 }
 
-// Виведення після заданого часу
 void DisplayAfterTime(int h, int m) {
     for (int i = 0; i < TABLE_SIZE; ++i) {
         for (const Record& r : table[i]) {
@@ -114,7 +108,6 @@ void DisplayAfterTime(int h, int m) {
     }
 }
 
-// Збереження
 bool SaveToFile(const string& filename) {
     ofstream ofs(filename);
     if (!ofs.is_open()) return false;
@@ -128,7 +121,6 @@ bool SaveToFile(const string& filename) {
     return true;
 }
 
-// Завантаження
 bool LoadFromFile(const string& filename) {
     ifstream ifs(filename);
     if (!ifs.is_open()) return false;
@@ -151,7 +143,6 @@ bool LoadFromFile(const string& filename) {
     return true;
 }
 
-// Меню
 int main() {
     setlocale(LC_CTYPE, "ukr");
 

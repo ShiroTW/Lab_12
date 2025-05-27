@@ -17,10 +17,8 @@ struct Record {
     int minute;
     bool isEmpty;
 
-    // Конструктор за замовчуванням
     Record() : destination(""), type(REGULAR), hour(0), minute(0), isEmpty(true) {}
 
-    // Конструктор з параметрами
     Record(const string& dest, ComfortType t, int h, int m, bool empty = false)
         : destination(dest), type(t), hour(h), minute(m), isEmpty(empty) {}
 };
@@ -28,7 +26,6 @@ struct Record {
 const int TABLE_SIZE = 100;
 Record table[TABLE_SIZE];
 
-// Хеш-функція: за назвою пункту і часом
 int Hash(const string& dest, int hour, int minute) {
     int hash = 0;
     for (char c : dest) hash += c;
@@ -36,7 +33,6 @@ int Hash(const string& dest, int hour, int minute) {
     return hash % TABLE_SIZE;
 }
 
-// Допоміжна функція перевірки часу
 bool ValidateTime(int h, int m) {
     return h >= 0 && h < 24 && m >= 0 && m < 60;
 }
@@ -59,7 +55,6 @@ string ComfortTypeToString(ComfortType type) {
     return "";
 }
 
-// Додавання запису
 bool InsertRecord(const Record& rec) {
     int hash = Hash(rec.destination, rec.hour, rec.minute);
     for (int i = 0; i < TABLE_SIZE; ++i) {
@@ -73,7 +68,6 @@ bool InsertRecord(const Record& rec) {
     return false;
 }
 
-// Пошук запису
 int FindIndex(const string& dest, int h, int m) {
     int hash = Hash(dest, h, m);
     for (int i = 0; i < TABLE_SIZE; ++i) {
@@ -86,7 +80,6 @@ int FindIndex(const string& dest, int h, int m) {
     return -1;
 }
 
-// Видалення
 bool DeleteRecord(const string& dest, int h, int m) {
     int idx = FindIndex(dest, h, m);
     if (idx != -1) {
@@ -96,7 +89,6 @@ bool DeleteRecord(const string& dest, int h, int m) {
     return false;
 }
 
-// Редагування
 bool EditRecord(const string& dest, int h, int m, const Record& newRec) {
     int idx = FindIndex(dest, h, m);
     if (idx != -1) {

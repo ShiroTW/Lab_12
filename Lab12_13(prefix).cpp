@@ -27,7 +27,6 @@ struct TrieNode {
     TrieNode() : isEnd(false) {}
 };
 
-// Create a new trie node
 TrieNode* CreateNode() {
     return new TrieNode();
 }
@@ -38,7 +37,6 @@ string trim(const string& s) {
     return (start == string::npos) ? "" : s.substr(start, end - start + 1);
 }
 
-// Переведення рядка в нижній регістр
 string toLower(const string& s) {
     string result = s;
     for (char& c : result) c = tolower(static_cast<unsigned char>(c));
@@ -64,7 +62,6 @@ string ComfortTypeToString(ComfortType type) {
     return "";
 }
 
-// Insert a record into the trie
 void InsertRecord(TrieNode* root, const Record& rec) {
     TrieNode* node = root;
     for (char c : rec.destination) {
@@ -77,7 +74,6 @@ void InsertRecord(TrieNode* root, const Record& rec) {
     node->records.push_back(rec);
 }
 
-// Find node for a given destination
 TrieNode* FindNode(TrieNode* root, const string& dest) {
     TrieNode* node = root;
     for (char c : dest) {
@@ -87,7 +83,6 @@ TrieNode* FindNode(TrieNode* root, const string& dest) {
     return node->isEnd ? node : nullptr;
 }
 
-// Delete a record by destination and time
 bool DeleteRecord(TrieNode* root, const string& dest, int h, int m) {
     TrieNode* node = FindNode(root, dest);
     if (!node) return false;
@@ -101,7 +96,6 @@ bool DeleteRecord(TrieNode* root, const string& dest, int h, int m) {
     return false;
 }
 
-// Edit a record: locate and replace
 bool EditRecord(TrieNode* root, const string& dest, int h, int m, const Record& newRec) {
     TrieNode* node = FindNode(root, dest);
     if (!node) return false;
@@ -114,7 +108,6 @@ bool EditRecord(TrieNode* root, const string& dest, int h, int m, const Record& 
     return false;
 }
 
-// Display records departing after given time
 void DisplayAfterTime(TrieNode* node, int h, int m) {
     if (node->isEnd) {
         for (auto& r : node->records) {
@@ -128,7 +121,6 @@ void DisplayAfterTime(TrieNode* node, int h, int m) {
     }
 }
 
-// Recursive save helper
 void SaveTrieHelper(TrieNode* node, const string& prefix, ofstream& ofs) {
     if (node->isEnd) {
         for (auto& r : node->records) {
@@ -140,7 +132,6 @@ void SaveTrieHelper(TrieNode* node, const string& prefix, ofstream& ofs) {
     }
 }
 
-// Save entire trie to file
 bool SaveTrieToFile(TrieNode* root, const string& filename) {
     ofstream ofs(filename);
     if (!ofs.is_open()) return false;
@@ -149,7 +140,6 @@ bool SaveTrieToFile(TrieNode* root, const string& filename) {
     return true;
 }
 
-// Load records from file into trie
 bool LoadTrieFromFile(TrieNode* root, const string& filename) {
     ifstream ifs(filename);
     if (!ifs.is_open()) return false;
@@ -171,7 +161,6 @@ bool LoadTrieFromFile(TrieNode* root, const string& filename) {
     return true;
 }
 
-// Validate time input
 bool ValidateTime(int h, int m) {
     return (h >= 0 && h < 24 && m >= 0 && m < 60);
 }
@@ -183,7 +172,6 @@ void DeleteTrie(TrieNode* node) {
     delete node;
 }
 
-// Top-down menu-driven program
 int main() {
     setlocale(LC_CTYPE, "ukr");
     TrieNode* root = CreateNode();
